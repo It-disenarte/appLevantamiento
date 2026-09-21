@@ -1,5 +1,5 @@
-import { q } from "./_lib/db.js";
-import { manejar } from "./_lib/auth.js";
+import { q } from "../_lib/db.js";
+import { manejar } from "../_lib/auth.js";
 
 // Healthcheck: app + conexión a Postgres.
 export default manejar(async (req, res) => {

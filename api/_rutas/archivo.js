@@ -1,7 +1,6 @@
 import { q } from "../_lib/db.js";
 import { manejar, leerCuerpo, puedeVer } from "../_lib/auth.js";
 
-export const config = { api: { bodyParser: false } };
 
 // GET  /api/archivos/:id          → binario (foto o audio)
 // PUT  /api/archivos/:id?proyecto=:pid  cuerpo binario, Content-Type del archivo

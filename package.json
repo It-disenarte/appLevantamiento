@@ -2,13 +2,10 @@
   "name": "levantamientos",
   "private": true,
   "type": "module",
-  "dependencies": {
-    "pg": "^8.13.1"
-  },
   "scripts": {
     "crear-admin": "node scripts/crear-admin.js"
   },
-  "engines": {
-    "node": "22.x"
+  "dependencies": {
+    "pg": "^8.13.1"
   }
 }

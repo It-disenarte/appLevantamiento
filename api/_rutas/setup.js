@@ -1,5 +1,5 @@
-import { q, tx } from "./_lib/db.js";
-import { manejar, hashear, crearSesion, nid, publico, validarPassword } from "./_lib/auth.js";
+import { q, tx } from "../_lib/db.js";
+import { manejar, hashear, crearSesion, nid, publico, validarPassword } from "../_lib/auth.js";
 
 // Llave fija para pg_advisory_xact_lock: serializa intentos simultáneos de configuración inicial.
 const LLAVE = 73012027;

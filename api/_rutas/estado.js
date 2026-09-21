@@ -1,5 +1,5 @@
-import { q } from "./_lib/db.js";
-import { manejar, PASSWORD_MIN } from "./_lib/auth.js";
+import { q } from "../_lib/db.js";
+import { manejar, PASSWORD_MIN } from "../_lib/auth.js";
 
 export default manejar(async (req, res) => {
   const r = await q("SELECT count(*)::int AS n FROM usuarios");

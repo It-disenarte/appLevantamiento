@@ -1,5 +1,5 @@
-import { q } from "./_lib/db.js";
-import { manejar } from "./_lib/auth.js";
+import { q } from "../_lib/db.js";
+import { manejar } from "../_lib/auth.js";
 
 // Usuarios activos (sin datos sensibles) para elegir con quién compartir un proyecto.
 export default manejar(async (req, res, u) => {

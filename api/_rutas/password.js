@@ -1,5 +1,5 @@
-import { q } from "./_lib/db.js";
-import { manejar, verificar, hashear, publico, validarPassword, cerrarSesiones, tokenDe } from "./_lib/auth.js";
+import { q } from "../_lib/db.js";
+import { manejar, verificar, hashear, publico, validarPassword, cerrarSesiones, tokenDe } from "../_lib/auth.js";
 
 export default manejar(async (req, res, u) => {
   if (req.method !== "POST") return res.status(405).end();
