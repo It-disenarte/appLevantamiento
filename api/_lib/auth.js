@@ -10,7 +10,7 @@ const unb64 = (s) => Buffer.from(s, "base64url");
 export const nid = (p) => p + "-" + Date.now().toString(36) + "-" + crypto.randomBytes(4).toString("hex");
 
 // scrypt (nativo de Node, sin dependencias). Parámetros explícitos para que no cambien.
-const SCRYPT = { N: 32768, r: 8, p: 1 };
+const SCRYPT = { N: 32768, r: 8, p: 1, maxmem: 128 * 1024 * 1024 };
 export function hashear(password) {
   const sal = crypto.randomBytes(16);
   const h = crypto.scryptSync(password, sal, 64, SCRYPT);
