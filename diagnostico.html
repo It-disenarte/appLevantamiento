@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnóstico PWA — Levantamientos</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  body { margin: 0; padding: 24px 18px 40px; font-family: system-ui, sans-serif; background: #F7F7F8; color: #333; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.sub { margin: 0 0 20px; color: #96989A; font-size: 14px; }
+  .fila { background: #fff; border-radius: 14px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(51,51,51,.09); display: flex; gap: 12px; align-items: flex-start; }
+  .bola { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; background: #96989A; }
+  .ok { background: #5CC6D0 } .mal { background: #E23D3D } .med { background: #E2A03D }
+  .t { font-size: 16px; font-weight: 600; }
+  .d { font-size: 14px; color: #96989A; word-break: break-all; }
+  button { margin-top: 14px; width: 100%; height: 54px; border: 0; border-radius: 14px; background: #A53692; color: #fff; font-size: 16px; font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>Diagnóstico PWA</h1>
+<p class="sub">Sube este archivo junto a la app y ábrelo en el celular: /levantamientos/diagnostico.html</p>
+<div id="out"></div>
+<button id="inst" hidden>Instalar aplicación</button>
+<script>
+const out = document.getElementById('out');
+function fila(t, estado, d) {
+  const e = document.createElement('div');
+  e.className = 'fila';
+  e.innerHTML = '<div class="bola ' + estado + '"></div><div><div class="t">' + t + '</div><div class="d">' + (d || '') + '</div></div>';
+  out.appendChild(e);
+}
+
+fila('URL', 'ok', location.href);
+fila('Protocolo', location.protocol === 'https:' ? 'ok' : 'mal',
+  location.protocol + (location.protocol === 'https:' ? ' — correcto' : ' — el service worker y la cámara NO funcionan sin https'));
+fila('Contexto seguro', window.isSecureContext ? 'ok' : 'mal',
+  window.isSecureContext ? 'sí' : 'no — certificado inválido o contenido mixto');
+fila('Soporta service worker', 'serviceWorker' in navigator ? 'ok' : 'mal', 'serviceWorker' in navigator ? 'sí' : 'no');
+fila('Soporta cámara', navigator.mediaDevices && navigator.mediaDevices.getUserMedia ? 'ok' : 'mal', navigator.mediaDevices ? 'sí' : 'no');
+fila('Modo instalado', matchMedia('(display-mode: standalone)').matches || navigator.standalone ? 'ok' : 'med',
+  matchMedia('(display-mode: standalone)').matches || navigator.standalone ? 'abierta como app instalada' : 'abierta en el navegador');
+fila('Navegador', 'ok', navigator.userAgent);
+
+fetch('manifest.json', { cache: 'no-store' }).then(r => {
+  const ct = r.headers.get('content-type') || 'sin content-type';
+  if (!r.ok) { fila('manifest.json', 'mal', 'HTTP ' + r.status + ' — el archivo no está subido'); return; }
+  return r.json().then(j => {
+    fila('manifest.json', 'ok', 'HTTP 200 · ' + ct + ' · iconos: ' + (j.icons || []).length);
+    (j.icons || []).forEach(ic => {
+      fetch(ic.src, { cache: 'no-store' }).then(ri => fila('Icono ' + ic.sizes, ri.ok ? 'ok' : 'mal', ic.src + ' — HTTP ' + ri.status));
+    });
+  });
+}).catch(e => fila('manifest.json', 'mal', String(e)));
+
+fetch('sw.js', { cache: 'no-store' })
+  .then(r => fila('sw.js accesible', r.ok ? 'ok' : 'mal', 'HTTP ' + r.status + ' · ' + (r.headers.get('content-type') || 'sin content-type')))
+  .catch(e => fila('sw.js accesible', 'mal', String(e)));
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js', { scope: './' })
+    .then(r => fila('Service worker registrado', 'ok', 'scope: ' + r.scope))
+    .catch(e => fila('Service worker registrado', 'mal', e.name + ': ' + e.message));
+}
+
+window.addEventListener('beforeinstallprompt', (ev) => {
+  ev.preventDefault();
+  fila('Chrome ofrece instalar', 'ok', 'sí — usa el botón de abajo');
+  const b = document.getElementById('inst');
+  b.hidden = false;
+  b.onclick = () => ev.prompt();
+});
+setTimeout(() => {
+  if (document.getElementById('inst').hidden) {
+    fila('Evento de instalación', 'med', 'Chrome no lo disparó. En iPhone/Safari es normal: se instala con Compartir > Agregar a pantalla de inicio. En Android, revisa las filas en rojo de arriba.');
+  }
+}, 3500);
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
+    },
+    {
+      "source": "/manifest.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json"
+        }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/usuarios/:id",
+      "destination": "/api/usuarios/item?id=:id"
+    },
+    {
+      "source": "/api/proyectos/:id",
+      "destination": "/api/proyectos/item?id=:id"
+    },
+    {
+      "source": "/api/archivos/:id",
+      "destination": "/api/archivos/item?id=:id"
+    }
+  ]
+}
