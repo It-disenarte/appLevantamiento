@@ -53,7 +53,13 @@ lo deja activo con rol admin y cierra sus sesiones.
 Las fotos viven en la base, así que el respaldo pesa lo que pesen las fotos.
 
 ## Roles
-- **usuario**: solo sus proyectos. Sincronización automática 4 s después de cada cambio y al recuperar señal.
+- **usuario**: solo sus proyectos. Sincronización automática: 4 s después de cada cambio, al recuperar señal,
+  al volver a la app y cada minuto mientras está abierta con internet.
+- **Compartir** envía una **copia independiente** (fotos, marcas y audios, con ids nuevos) a cada persona
+  elegida; el original queda intacto como respaldo de la versión previa. La copia aparece en la app del
+  destinatario en su siguiente sincronización, marcada "copia de <quien la envió>". El ZIP sigue disponible como
+  enlace secundario dentro de "Compartir proyecto" para entregas al cliente.
+- **Girar foto** (⟳ en el editor): rota 90° la imagen y sus marcas; la foto se vuelve a subir al servidor.
 - **admin**: todo lo anterior + lista de usuarios (crear, desactivar, regenerar contraseña, último acceso)
   y **Proyectos de todos** (descargar, abrir, editar y exportar).
 
@@ -69,7 +75,9 @@ POST /api/password               { actual, nueva }
 GET  /api/usuarios               (admin)
 POST /api/usuarios               (admin) { nombre, correo } → passwordTemporal
 PATCH /api/usuarios/:id          (admin) { activo | nombre | rol | resetPassword }
+GET  /api/companeros             usuarios activos para compartir
 GET  /api/proyectos[?todos=1]    lista sin fotos
+POST /api/proyectos/:id/compartir  (dueño o admin) { usuarios: [ids] } → envía una COPIA independiente a cada uno
 GET  /api/proyectos/:id          proyecto completo + lista de archivos
 PUT  /api/proyectos/:id          { proyecto }  (409 si el servidor tiene versión más nueva)
 DELETE /api/proyectos/:id
@@ -78,7 +86,7 @@ PUT  /api/archivos/:id?proyecto= binario (Content-Type del archivo, máx. ~4.5 M
 ```
 
 ## Al publicar una versión nueva
-Sube el número de caché en `sw.js` (`levantamientos-v15`) para que los teléfonos instalados tomen la nueva versión.
+Sube el número de caché en `sw.js` (`levantamientos-v17`) para que los teléfonos instalados tomen la nueva versión.
 
 ## Archivos
 ```

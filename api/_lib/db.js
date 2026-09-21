@@ -80,6 +80,13 @@ export function esquema() {
       creado TIMESTAMPTZ NOT NULL DEFAULT now()
     );
     CREATE INDEX IF NOT EXISTS archivos_proyecto ON archivos(proyecto_id);
+    CREATE TABLE IF NOT EXISTS proyecto_usuarios (
+      proyecto_id TEXT NOT NULL REFERENCES proyectos(id) ON DELETE CASCADE,
+      usuario_id TEXT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+      creado TIMESTAMPTZ NOT NULL DEFAULT now(),
+      PRIMARY KEY (proyecto_id, usuario_id)
+    );
+    CREATE INDEX IF NOT EXISTS proyecto_usuarios_usuario ON proyecto_usuarios(usuario_id);
   `).catch(e => { listo = null; throw e; });
   return listo;
 }

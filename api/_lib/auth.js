@@ -109,3 +109,11 @@ export function leerCuerpo(req) {
     req.on("error", rej);
   });
 }
+
+/** ¿Puede u ver/editar el proyecto p? Dueño, admin o colaborador. */
+export async function puedeVer(u, p) {
+  if (!p) return true;
+  if (u.rol === "admin" || p.usuario_id === u.id) return true;
+  const r = await q("SELECT 1 FROM proyecto_usuarios WHERE proyecto_id = $1 AND usuario_id = $2", [p.id, u.id]);
+  return r.rowCount > 0;
+}

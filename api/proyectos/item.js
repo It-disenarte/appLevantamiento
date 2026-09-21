@@ -1,17 +1,18 @@
 import { q } from "../_lib/db.js";
-import { manejar } from "../_lib/auth.js";
+import { manejar, puedeVer } from "../_lib/auth.js";
 
 export default manejar(async (req, res, u) => {
   const { id } = req.query;
   const r = await q("SELECT * FROM proyectos WHERE id = $1", [id]);
   const p = r.rows[0];
-  const puede = !p || u.rol === "admin" || p.usuario_id === u.id;
-  if (!puede) return res.status(403).json({ error: "Sin acceso a este proyecto" });
+  if (!(await puedeVer(u, p))) return res.status(403).json({ error: "Sin acceso a este proyecto" });
+  const esDueno = !p || u.rol === "admin" || p.usuario_id === u.id;
 
   if (req.method === "GET") {
     if (!p) return res.status(404).json({ error: "No existe" });
     const a = await q("SELECT id, tipo, tam FROM archivos WHERE proyecto_id = $1", [id]);
-    return res.json({ proyecto: { ...p.datos, id: p.id, usuarioId: p.usuario_id, creado: Number(p.creado), modificado: Number(p.modificado), borrado: p.borrado }, archivos: a.rows });
+    const c = await q("SELECT usuario_id FROM proyecto_usuarios WHERE proyecto_id = $1", [id]);
+    return res.json({ proyecto: { ...p.datos, id: p.id, usuarioId: p.usuario_id, creado: Number(p.creado), modificado: Number(p.modificado), borrado: p.borrado, compartidoCon: c.rows.map(x => x.usuario_id) }, archivos: a.rows });
   }
   if (req.method === "PUT") {
     const d = req.body && req.body.proyecto;
@@ -21,7 +22,7 @@ export default manejar(async (req, res, u) => {
       const a = await q("SELECT id, tipo, tam FROM archivos WHERE proyecto_id = $1", [id]);
       return res.status(409).json({ error: "Versión más nueva en el servidor", proyecto: { ...p.datos, id: p.id, usuarioId: p.usuario_id, creado: Number(p.creado), modificado: Number(p.modificado) }, archivos: a.rows });
     }
-    const { id: _i, usuarioId: _u, creado, modificado, borrado, ...datos } = d;
+    const { id: _i, usuarioId: _u, creado, modificado, borrado, compartidoCon: _c, compartidoConmigo: _m, ...datos } = d;
     await q(
       `INSERT INTO proyectos (id, usuario_id, cliente, sitio, fecha, datos, creado, modificado, borrado)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,FALSE)
@@ -33,6 +34,7 @@ export default manejar(async (req, res, u) => {
   }
   if (req.method === "DELETE") {
     if (!p) return res.json({ ok: true });
+    if (!esDueno) return res.status(403).json({ error: "Solo quien creó el proyecto puede eliminarlo" });
     await q("DELETE FROM archivos WHERE proyecto_id = $1", [id]);
     await q("UPDATE proyectos SET borrado = TRUE, modificado = $2 WHERE id = $1", [id, Date.now()]);
     return res.json({ ok: true });

@@ -39,6 +39,10 @@
   },
   "rewrites": [
     {
+      "source": "/api/proyectos/:id/compartir",
+      "destination": "/api/proyectos/compartir?id=:id"
+    },
+    {
       "source": "/api/usuarios/:id",
       "destination": "/api/usuarios/item?id=:id"
     },
