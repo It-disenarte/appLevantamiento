@@ -33,26 +33,14 @@
     }
   ],
   "functions": {
-    "api/**/*.js": {
+    "api/index.js": {
       "maxDuration": 30
     }
   },
   "rewrites": [
     {
-      "source": "/api/proyectos/:id/compartir",
-      "destination": "/api/proyectos/compartir?id=:id"
-    },
-    {
-      "source": "/api/usuarios/:id",
-      "destination": "/api/usuarios/item?id=:id"
-    },
-    {
-      "source": "/api/proyectos/:id",
-      "destination": "/api/proyectos/item?id=:id"
-    },
-    {
-      "source": "/api/archivos/:id",
-      "destination": "/api/archivos/item?id=:id"
+      "source": "/api/:ruta*",
+      "destination": "/api/index?ruta=:ruta*"
     }
   ]
 }

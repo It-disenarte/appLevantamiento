@@ -64,6 +64,7 @@ Las fotos viven en la base, así que el respaldo pesa lo que pesen las fotos.
   y **Proyectos de todos** (descargar, abrir, editar y exportar).
 
 ## Endpoints
+La app los llama como `/api/index?ruta=<ruta>` (una sola función); las rutas `/api/<ruta>` también funcionan si el rewrite de `vercel.json` aplica.
 ```
 GET  /api/estado                 ¿falta crear el admin?
 GET  /api/salud                  healthcheck (app + Postgres)
@@ -86,16 +87,17 @@ PUT  /api/archivos/:id?proyecto= binario (Content-Type del archivo, máx. ~4.5 M
 ```
 
 ## Al publicar una versión nueva
-Sube el número de caché en `sw.js` (`levantamientos-v17`) para que los teléfonos instalados tomen la nueva versión.
+Sube el número de caché en `sw.js` (`levantamientos-v18`) para que los teléfonos instalados tomen la nueva versión.
 
 ## Archivos
 ```
 index.html        la app completa (bundle; pedir la versión fuente para cambios de diseño)
-api/              funciones serverless (Node ESM). api/_lib: conexión, esquema, auth
+api/index.js      única función serverless (límite de 12 en plan Hobby); enruta a api/_rutas/*
+api/_lib/         conexión, esquema, auth
 scripts/          crear-admin (recuperar acceso)
 deploy/           respaldo.sh (pg_dump diario, 14 días)
 package.json      dependencia pg
-vercel.json       rutas /api/*/:id, cabeceras, duración de funciones
+vercel.json       rewrite /api/* → api/index, cabeceras, duración de la función
 reg.js, sw.js     service worker (no cachea /api)
 manifest.json, icon-*.png (isotipo oficial), logo.png, isotipo.png
 diagnostico.html  verificación de la PWA
