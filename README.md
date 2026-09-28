@@ -75,7 +75,7 @@ GET  /api/yo                     usuario de la sesión
 POST /api/password               { actual, nueva }
 GET  /api/usuarios               (admin)
 POST /api/usuarios               (admin) { nombre, correo } → passwordTemporal
-PATCH /api/usuarios/:id          (admin) { activo | nombre | rol | resetPassword }
+PATCH /api/usuarios/:id          (admin) { activo | nombre | correo | rol | resetPassword }
 GET  /api/companeros             usuarios activos para compartir
 GET  /api/proyectos[?todos=1]    lista sin fotos
 POST /api/proyectos/:id/compartir  (dueño o admin) { usuarios: [ids] } → envía una COPIA independiente a cada uno
@@ -87,7 +87,7 @@ PUT  /api/archivos/:id?proyecto= binario (Content-Type del archivo, máx. ~4.5 M
 ```
 
 ## Al publicar una versión nueva
-Sube el número de caché en `sw.js` (`levantamientos-v18`) para que los teléfonos instalados tomen la nueva versión.
+Sube el número de caché en `sw.js` (`levantamientos-v19`) para que los teléfonos instalados tomen la nueva versión.
 
 ## Archivos
 ```

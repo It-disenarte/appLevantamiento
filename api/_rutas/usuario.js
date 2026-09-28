@@ -4,7 +4,7 @@ import { manejar, hashear, publico, passwordAleatoria, cerrarSesiones } from "..
 export default manejar(async (req, res, admin) => {
   const { id } = req.query;
   if (req.method !== "PATCH") return res.status(405).end();
-  const { activo, nombre, rol, resetPassword } = req.body || {};
+  const { activo, nombre, correo, rol, resetPassword } = req.body || {};
   if (id === admin.id && (activo === false || (rol && rol !== "admin"))) return res.status(400).json({ error: "No puedes desactivarte ni quitarte el rol admin a ti mismo" });
   let temporal = null;
   if (typeof activo === "boolean") {
@@ -12,6 +12,12 @@ export default manejar(async (req, res, admin) => {
     if (!activo) await cerrarSesiones(id);
   }
   if (nombre) await q("UPDATE usuarios SET nombre = $2 WHERE id = $1", [id, String(nombre).trim()]);
+  if (correo) {
+    const c = String(correo).trim().toLowerCase();
+    const dup = await q("SELECT 1 FROM usuarios WHERE correo = $1 AND id <> $2", [c, id]);
+    if (dup.rowCount) return res.status(409).json({ error: "Ese correo ya lo usa otra cuenta" });
+    await q("UPDATE usuarios SET correo = $2 WHERE id = $1", [id, c]);
+  }
   if (rol === "admin" || rol === "usuario") await q("UPDATE usuarios SET rol = $2 WHERE id = $1", [id, rol]);
   if (resetPassword) {
     temporal = passwordAleatoria();

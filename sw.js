@@ -1,4 +1,4 @@
-const CACHE = 'levantamientos-v17';
+const CACHE = 'levantamientos-v19';
 const SHELL = ['./', './index.html', './reg.js', './manifest.json', './icon-192.png', './icon-512.png', './icon-192-maskable.png', './icon-512-maskable.png'];
 
 self.addEventListener('install', (e) => {
