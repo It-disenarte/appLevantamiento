@@ -29,6 +29,9 @@ export default manejar(async (req, res, u) => {
        ON CONFLICT (id) DO UPDATE SET cliente = $3, sitio = $4, fecha = $5, datos = $6, modificado = $8, borrado = FALSE`,
       [id, p ? p.usuario_id : u.id, d.cliente || "", d.sitio || "", d.fecha || "", JSON.stringify(datos), creado || Date.now(), modificado || Date.now()]
     );
+    // La propuesta final es un solo PDF por proyecto: si se quitó o cambió de id, se borra la anterior.
+    const prop = datos.propuesta && datos.propuesta.archivoId;
+    await q("DELETE FROM archivos WHERE proyecto_id = $1 AND id LIKE 'prop-%' AND id <> $2", [id, prop || ""]);
     const a = await q("SELECT id FROM archivos WHERE proyecto_id = $1", [id]);
     return res.json({ ok: true, archivos: a.rows.map(x => x.id) });
   }

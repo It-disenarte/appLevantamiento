@@ -22,6 +22,7 @@ export default manejar(async (req, res, u) => {
     if (!(await puedeVer(u, p.rows[0]))) return res.status(403).json({ error: "Sin acceso" });
     const datos = await leerCuerpo(req);
     if (!datos.length) return res.status(400).json({ error: "Archivo vacío" });
+    if (id.startsWith("prop-") && datos.length > 4 * 1024 * 1024) return res.status(413).json({ error: "El PDF de la propuesta supera 4 MB" });
     await q(
       "INSERT INTO archivos (id, proyecto_id, tipo, datos, tam) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (id) DO UPDATE SET tipo = $3, datos = $4, tam = $5",
       [id, pid, req.headers["content-type"] || "application/octet-stream", datos, datos.length]

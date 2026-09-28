@@ -21,6 +21,7 @@ export default manejar(async (req, res, u) => {
     const mapa = {}; // id viejo → id nuevo (elementos, marcas y archivos)
     const nuevo = (viejo, pref) => (mapa[viejo] = mapa[viejo] || nid(pref));
     const datos = JSON.parse(JSON.stringify(p.datos));
+    if (datos.propuesta && datos.propuesta.archivoId) datos.propuesta.archivoId = nuevo(datos.propuesta.archivoId, "prop");
     (datos.hojas || []).forEach(h => {
       h.id = nid("h");
       (h.elementos || []).forEach(e => {
