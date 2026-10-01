@@ -1,4 +1,4 @@
-const CACHE = 'levantamientos-v29';
+const CACHE = 'levantamientos-v30';
 const SHELL = ['./', './index.html', './reg.js', './manifest.json', './icon-192.png', './icon-512.png', './icon-192-maskable.png', './icon-512-maskable.png', './favicon.svg', './favicon.ico', './apple-touch-icon.png'];
 // Recursos externos que la app carga al arrancar; se guardan desde la instalación
 // para que abra sin internet aunque la primera visita no pasara por el service worker.
