@@ -8,8 +8,10 @@
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'default' }],
     ['meta', { name: 'apple-mobile-web-app-title', content: 'Levantamientos' }],
-    ['link', { rel: 'apple-touch-icon', href: 'icon-192.png' }],
-    ['link', { rel: 'icon', type: 'image/png', href: 'icon-192.png' }]
+    // Nombres con versión: el navegador guarda el favicon por URL y seguiría mostrando el anterior.
+    ['link', { rel: 'apple-touch-icon', href: 'apple-touch-icon.png?v=2' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: 'favicon.svg?v=2' }],
+    ['link', { rel: 'shortcut icon', href: 'favicon.ico?v=2' }]
   ];
   function asegurar() {
     var head = document.head || document.getElementsByTagName('head')[0];
