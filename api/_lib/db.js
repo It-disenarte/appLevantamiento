@@ -1,6 +1,6 @@
 import pg from "pg";
 
-// Reusar el pool entre invocaciones de la misma instancia en Vercel; chico para no agotar
+// Un solo pool por proceso; tamaño por DB_POOL_MAX para no agotar
 // las conexiones de Postgres (max_connections = 100 por defecto).
 const g = globalThis;
 let listo;

@@ -1,5 +1,4 @@
-// Una sola función serverless (límite de 12 en el plan Hobby de Vercel) que enruta /api/*.
-// vercel.json reescribe /api/:ruta* → /api/index?ruta=:ruta*
+// Enrutador único de /api/*: server.js le pasa /api/<ruta> (o /api/index?ruta=<ruta>, como lo llama la app).
 import estado from "./_rutas/estado.js";
 import setup from "./_rutas/setup.js";
 import salud from "./_rutas/salud.js";
