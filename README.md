@@ -66,6 +66,9 @@ Las fotos viven en la base, así que el respaldo pesa lo que pesen las fotos.
   elegida; el original queda intacto como respaldo de la versión previa. La copia aparece en la app del
   destinatario en su siguiente sincronización, marcada "copia de <quien la envió>". El ZIP sigue disponible como
   enlace secundario dentro de "Compartir proyecto" para entregas al cliente.
+- **Archivos** (junto a Foto en la hoja): agrega varios archivos a la vez, para lo que no se capturó en sitio.
+  Las imágenes entran como fotos (se comprimen y se marcan en el editor); lo demás (PDF, planos, Excel…) queda
+  adjunto a la hoja (máx. 25 MB c/u), se abre al tocarlo y va en el ZIP dentro de la carpeta de la hoja.
 - **Girar foto** (⟳ en el editor): rota 90° la imagen y sus marcas; la foto se vuelve a subir al servidor.
 - **admin**: todo lo anterior + lista de usuarios (crear, desactivar, regenerar contraseña, último acceso)
   y **Proyectos de todos** (descargar, abrir, editar y exportar).
@@ -94,7 +97,7 @@ PUT  /api/archivos/:id?proyecto= binario (Content-Type del archivo)
 ```
 
 ## Al publicar una versión nueva
-Sube el número de caché en `sw.js` (`levantamientos-v19`) para que los teléfonos instalados tomen la nueva versión.
+Sube el número de caché en `sw.js` (`levantamientos-v32`) para que los teléfonos instalados tomen la nueva versión.
 
 ## Archivos
 ```
