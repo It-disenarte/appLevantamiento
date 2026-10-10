@@ -97,7 +97,7 @@ PUT  /api/archivos/:id?proyecto= binario (Content-Type del archivo)
 ```
 
 ## Al publicar una versión nueva
-Sube el número de caché en `sw.js` (`levantamientos-v32`) para que los teléfonos instalados tomen la nueva versión.
+Sube el número de caché en `sw.js` (`levantamientos-v33`) para que los teléfonos instalados tomen la nueva versión.
 
 ## Archivos
 ```
